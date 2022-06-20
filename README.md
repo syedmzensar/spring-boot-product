@@ -13,4 +13,5 @@
 
 > server.port = 3333 (can be changed)
 
+**Added images "war.png" and "jar.png". Both the files tested on ran on my personal desktop.**
 

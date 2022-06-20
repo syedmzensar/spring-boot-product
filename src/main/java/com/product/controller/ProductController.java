@@ -21,8 +21,13 @@ import com.product.dto.ProductDto;
 import com.product.service.ProductService;
 
 @RestController
-@RequestMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, consumes = {
-		MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+
+/** Have commented this out as get method is not working for war and jar
+ * 	can be uncommented if use case requires
+ * 	@RequestMapping(produces = { MediaType.APPLICATION_JSON_VALUE,
+ * 	MediaType.APPLICATION_XML_VALUE }, consumes = {
+ * 	MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+ **/
 public class ProductController {
 
 	@Autowired

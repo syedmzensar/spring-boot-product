@@ -14,7 +14,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/javabatch
     username: root
-    password: Temp1234
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
