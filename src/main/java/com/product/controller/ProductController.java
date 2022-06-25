@@ -24,11 +24,20 @@ import com.product.service.ProductService;
 
 @RestController
 
+<<<<<<< HEAD
 /*
  * @RequestMapping(produces = { "application/json" }, consumes = {
  * MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
  */
 
+=======
+/** Have commented this out as get method is not working for war and jar
+ * 	can be uncommented if use case requires
+ * 	@RequestMapping(produces = { MediaType.APPLICATION_JSON_VALUE,
+ * 	MediaType.APPLICATION_XML_VALUE }, consumes = {
+ * 	MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+ **/
+>>>>>>> branch 'master' of https://github.com/syedmzensar/spring-boot-product.git
 public class ProductController {
 
 	@Autowired
