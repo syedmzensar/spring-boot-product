@@ -3,12 +3,21 @@ server:
   
 management:
   server:
-   port: 9000
+   port: 9001
     
   endpoints:
     web:
       exposure:
         include: "*"
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: true
 
 spring:
   datasource:
@@ -17,8 +26,10 @@ spring:
     password: Temp1234
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
        format_sql: true
+  application:
+    name: product

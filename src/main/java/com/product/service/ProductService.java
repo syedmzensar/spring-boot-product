@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.product.dto.ProductDto;
+import com.product.entity.Product;
 
 public interface ProductService {
 

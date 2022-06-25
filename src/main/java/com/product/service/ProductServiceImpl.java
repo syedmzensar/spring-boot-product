@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.product.dto.ProductDto;
 import com.product.entity.Product;
+import com.product.exception.ProductAlreadyExistsException;
+import com.product.exception.ProductNotFoundException;
 import com.product.repository.ProductRepository;
 
 @Service
@@ -26,7 +28,10 @@ public class ProductServiceImpl implements ProductService {
 	public ProductDto getProduct(int productId) {
 		Product product = productRepository.findById(productId).get();
 
-		return modelMapper.map(product, ProductDto.class);
+		if (product.getProductId() != productId)
+			throw new ProductNotFoundException("Product with this id is not there");
+		else
+			return modelMapper.map(product, ProductDto.class);
 
 	}
 
@@ -48,9 +53,18 @@ public class ProductServiceImpl implements ProductService {
 	public ProductDto insertProduct(ProductDto productDto) {
 
 		Product product = modelMapper.map(productDto, Product.class);
+
+		boolean checkId = productRepository.existsById(product.getProductId());
+
+		if (checkId) {
+			throw new ProductAlreadyExistsException("This product already exists");
+		}
+
 		Product productDtoInsert = productRepository.save(product);
 
 		return modelMapper.map(productDtoInsert, ProductDto.class);
+
+//		return productRepository.save(product);
 	}
 
 	public void updateProduct(int productId, ProductDto productDto) {
