@@ -2,42 +2,35 @@ package com.product.controller;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.product.dto.ProductDto;
 import com.product.entity.CouponDto;
-import com.product.entity.Product;
+import com.product.model.AuthenticationRequest;
+import com.product.model.AuthenticationResponse;
 import com.product.restclient.CouponRestClient;
+import com.product.security.MyUserDetailsService;
 import com.product.service.ProductService;
+import com.product.util.JwtUtil;
 
 @RestController
-
-<<<<<<< HEAD
-/*
- * @RequestMapping(produces = { "application/json" }, consumes = {
- * MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
- */
-
-=======
-/** Have commented this out as get method is not working for war and jar
- * 	can be uncommented if use case requires
- * 	@RequestMapping(produces = { MediaType.APPLICATION_JSON_VALUE,
- * 	MediaType.APPLICATION_XML_VALUE }, consumes = {
- * 	MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
- **/
->>>>>>> branch 'master' of https://github.com/syedmzensar/spring-boot-product.git
 public class ProductController {
 
 	@Autowired
@@ -45,6 +38,33 @@ public class ProductController {
 
 	@Autowired
 	private CouponRestClient restClient;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private JwtUtil jwtTokenUtil;
+
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+
+	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
+			throws Exception {
+
+		try {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+		} catch (BadCredentialsException e) {
+			throw new Exception("Incorrect username or password", e);
+		}
+
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
+		final String jwt = jwtTokenUtil.generateToken(userDetails);
+
+		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	}
 
 	@GetMapping(value = "/products/{productId}")
 	public ResponseEntity<ProductDto> getProduct(@PathVariable("productId") int productId) {
@@ -69,7 +89,7 @@ public class ProductController {
 		productDto.setProductPrice(productDto.getProductPrice() - couponDto.getDiscount());
 
 //		ModelMapper  modelMapper = new ModelMapper();
-		
+
 //		Product product = modelMapper.map(productDto, Product.class);
 		return new ResponseEntity<ProductDto>(productService.insertProduct(productDto), HttpStatus.CREATED);
 
